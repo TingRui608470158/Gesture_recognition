@@ -1,12 +1,16 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+import matplotlib.patches as patches
+
+
 import cv2
 import keyboard
 import csv
 
 gesture_class = 7
 
-gesture_id = ["stop", "clockwise", "anticlock_wise", "down", "left", "right", "up"]
+gesture_id = ["stop", "clockwise", "anticlock_wise", "down", "left", "right", "up","front"]
 input_path = '../annotation/step1_output.csv'
 output_path = '../annotation/step2_output.csv'
 Last_row_index = 0
@@ -74,9 +78,24 @@ while i < len(class_value[0]):
     print("row(",i,")")
     #資料取值
     single_row_data = input_value.values[i:i+1] #取單一列的資料
-    x_value = [float(single_row_data[:,j]) for j in range(0,single_row_data.shape[1],2) ] #將單一列的x值取出並轉呈list
-    y_value = [float(single_row_data[:,j]) for j in range(1,single_row_data.shape[1],2) ] #將單一列的y值取出並轉呈list
-    print(single_row_data[0])
+    x_value = [float(single_row_data[:,j]) for j in range(0,single_row_data.shape[1],3) ] #將單一列的x值取出並轉呈list
+    y_value = [float(single_row_data[:,j]) for j in range(1,single_row_data.shape[1],3) ] #將單一列的y值取出並轉呈list
+    bbox_value = [float(single_row_data[:,j]) for j in range(2,single_row_data.shape[1],3) ]
+
+    # print(single_row_data[0])
+    # bbox_weight_list = []
+    x_size = 0
+    for j,bbox_size in enumerate(bbox_value):
+        print(j,bbox_size) 
+        # bbox_size = bbox_size*640*640/1920/1080
+        bbox_weight = round((bbox_size)** 0.5, 3)
+        plt_text = str(bbox_weight)
+        plt.text(-1+x_size,-0.9,plt_text,fontsize=12*bbox_size*8)
+        x_size = x_size +0.2
+    plt.pause(0.01)
+        # bbox_weight_list.append(bbox_weight)
+
+
 
     plt.xlim(-1,1)
     plt.ylim(1,-1)
@@ -84,6 +103,7 @@ while i < len(class_value[0]):
     plt.ylabel('y label') # 設定 y 軸標題
 
     plt.scatter(x_value, y_value)
+
     plt_text = "Row:"+str(i)+"/"+str(len(class_value[0])-1) + ", label:" + str(class_value[0][i])+","+ gesture_id[int(class_value[0][i])]
     plt.text(-1,-1.1,plt_text,fontsize=18)
     # 繪製散點圖    
