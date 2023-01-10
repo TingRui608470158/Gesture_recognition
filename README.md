@@ -34,6 +34,6 @@ data.taml 移至step1/yolov5路徑下
 
 訓練yolov5
 ```
-$ python train.py --weights yolov5s --data data.yaml
+$ python train.py --weights yolov5s --data data.yaml --cfg yolov5s.yaml
 ```
 
