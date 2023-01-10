@@ -24,7 +24,6 @@ $ cd step1
 $ git clone https://github.com/ultralytics/yolov5  
 $ mv create_csv_file.py yolov5
 $ cd yolov5
-$ gedit requirements.txt  #刪除第一行的火箭，火箭有可能出bug
 $ pip install -r requirements.txt  
 ```
 
