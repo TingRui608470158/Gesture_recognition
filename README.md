@@ -53,7 +53,10 @@ $ python train.py --weights yolov5s --data data.yaml --cfg yolov5s.yaml
 ![](https://i.imgur.com/5Yilcj8.png)
 
 ### 用Windows內建的錄影軟體錄影
-https://user-images.githubusercontent.com/58456895/211729580-d0d89a23-4349-4f30-81da-58718ed35ef6.mp4
+
+
+https://user-images.githubusercontent.com/58456895/211729738-bc4b5742-485a-4359-94dc-7ae1416388d9.mp4
+
 
 
 
