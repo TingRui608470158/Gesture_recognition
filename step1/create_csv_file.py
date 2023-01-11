@@ -57,7 +57,7 @@ def run(
         source=ROOT / 'data/images',  # file/dir/URL/glob/screen/0(webcam)
         data=ROOT / 'data/coco128.yaml',  # dataset.yaml path
         imgsz=(640, 640),  # inference size (height, width)
-        conf_thres=0.25,  # confidence threshold
+        conf_thres=0.5,  # confidence threshold
         iou_thres=0.45,  # NMS IOU threshold
         max_det=1,  # maximum detections per image
         device='',  # cuda device, i.e. 0 or 0,1,2,3 or cpu
@@ -123,7 +123,8 @@ def run(
     orign_point = []
     csv_count = 0
     First_point = True
-    gesture_class = ["stop", "clockwise", "anticlock_wise", "down", "left", "right", "up"]
+    # gesture_class = ["stop", "clockwise", "anticlock_wise", "down", "left", "right", "up"]
+    gesture_class = ["stop", "down", "left", "right", "up"]
     for path, im, im0s, vid_cap, s in dataset:
         for class_index, class_name in enumerate(gesture_class):
             if gesture_class[class_index] in path:
@@ -200,7 +201,7 @@ def run(
                     First_point = False
                 csv_frame_points.append(csv_x/1920)  
                 csv_frame_points.append(csv_y/1080)
-                if csv_count > 15:
+                if csv_count > 3:
                     # print(csv_frame_points)
                     Write_midpoint_csv(csv_frame_points)
                     csv_frame_points = []
@@ -210,11 +211,11 @@ def run(
                     # print("orign_point after pop= ",orign_point)
                     start_point = orign_point[0], orign_point[1]
                     # print("orign_point = ",orign_point)
-                    for j in range(15):    
+                    for j in range(3):    
                         # print("j = ",j)
                         csv_frame_points.append((orign_point[2*j]-start_point[0])/1920)
                         csv_frame_points.append((orign_point[2*j+1]-start_point[1])/1080)
-                    csv_count = 15
+                    csv_count = 3
                     # print(csv_frame_points)
                     # print("start_point",start_point,"\n")
                     # csv_frame_points = []
