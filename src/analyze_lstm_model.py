@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
-Gesture_class = ['stop', 'clockwise', 'anticlockwise', 'down', 'left', 'right', 'up']
+Gesture_class = ['stop', 'down', 'left', 'right', 'up']
 
 class PointHistoryClassifier(object):
     def __init__(
@@ -109,8 +109,8 @@ for single_gesture in X_range_list_all:
             # slope = -y_range/x_range
             # print("slope = ",slope)
 
-            x_list= np.linspace(0, x_range, 16)
-            y_list= np.linspace(0, single_gesture[2], 16)
+            x_list= np.linspace(0, x_range, 4)
+            y_list= np.linspace(0, single_gesture[2], 4)
             point_list = []
             for i in range(len(x_list)):
                 # single_point = [x_list[i],y_list[i]]
@@ -145,8 +145,8 @@ for single_gesture in X_range_list_all:
             # slope = -y_range/x_range
             # print("slope = ",slope)
 
-            x_list= np.linspace(0, single_gesture[1], 16)
-            y_list= np.linspace(0, y_range, 16)
+            x_list= np.linspace(0, single_gesture[1], 4)
+            y_list= np.linspace(0, y_range, 4)
             point_list = []
             for i in range(len(x_list)):
                 # single_point = [x_list[i],y_list[i]]
