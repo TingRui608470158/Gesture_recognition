@@ -6,7 +6,7 @@ import csv
 
 gesture_class = 7
 
-gesture_id = ["stop", "clockwise", "anticlock_wise", "down", "left", "right", "up"]
+gesture_id = ["stop", "down", "left", "right", "up"]
 input_path = '../annotation/step1_output.csv'
 output_path = '../annotation/step2_output.csv'
 Last_row_index = 0
