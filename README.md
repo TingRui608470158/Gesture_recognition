@@ -38,11 +38,21 @@ git clone https://github.com/ultralytics/yolov5
 mv create_csv_file.py yolov5
 cd yolov5
 
-pip install -r requirements.txt  
+pip install -r requirements.txt 
 ```
 
 #### 準備資料集
-手部資料集範例下載([連結](https://drive.google.com/file/d/1N59Gne5AfxXC6mqmHFVToakzUHqRj8nz/view?usp=share_link)),這裡僅是我訓練用的一小部分,僅供訓練範例使用。
+手部資料集範例下載
+```
+pip install roboflow
+python
+from roboflow import Roboflow
+rf = Roboflow(api_key="hyh1caIftsOB4z9RuLIs")
+project = rf.workspace("leapsy").project("hand_dataset")
+dataset = project.version(19).download("yolov5")
+exit()
+```
+這裡僅是我訓練用的一小部分,僅供訓練範例使用。
 將資料集的train,test,valid資料集移至src路徑下,data.yaml移至src/yolov5路徑下。
 如果想自己收集資料集,可以看下一小節。
 * 收集資料集
@@ -54,7 +64,10 @@ pip install -r requirements.txt
 
 #### 訓練yolov5
 ```
-python train.py --weights yolov5s --data data.yaml --cfg yolov5s.yaml
+python train.py --weights yolov5s --data hand_dataset-19/data.yaml --cfg yolov5s.yaml
+
+# 如果有遇到opencv問題可以試這個
+# pip install opencv-python==4.5.1.48
 ```
 訓練完後的模型權重會在 runs/train/"exp"/weights 下,這裡的"exp"實際名稱會根據執行train.py的次數而不同,簡單來說就是最新的exp資料夾,後面的數字會越大,如下圖所示。
 ![](https://i.imgur.com/5Yilcj8.png)
@@ -66,17 +79,22 @@ python train.py --weights yolov5s --data data.yaml --cfg yolov5s.yaml
 https://user-images.githubusercontent.com/58456895/211729738-bc4b5742-485a-4359-94dc-7ae1416388d9.mp4
 
 錄完後將影片放入dataet資料夾如下圖所示。
+```
+## 如果不想錄影，可以做以下步驟來下載影片。
+pip install gdown
+gdown --no-check-certificate --folder https://drive.google.com/drive/folders/1Nz1rAHkG7t-e51Vya1gdeoBhi_Wi4B5I?usp=share_link
+mv ./lstm ../../dataset
+```
 ![](https://i.imgur.com/pPWbCwu.png)
 
 * ### 生成初步csv檔
 這裡的weights路徑為yolov5訓練的權重檔路徑。
 ```
-python create_csv_file.py --weights runs/train/exp12/weights/best.pt --source ../../dataset
+python create_csv_file.py --weights runs/train/exp1/weights/best.pt --source ../../dataset/lstm
 ```
 會生成一個annotation/step1_output.csv檔。
-
 * step1_output.csv
-![](https://i.imgur.com/VtHgTJb.png)<br>
+![](https://i.imgur.com/VtHgTJb.png)
     * 第1欄: class值。
     * 第2,3欄: 軌跡的起始點(x,y),所以永遠都為(0,0)。
     * 第4,5,6,7,8,9欄: 軌跡的剩下三個點相對於起始點的位置,並將值標準化至-1~1。
@@ -115,7 +133,8 @@ x軸與y軸標的數值準化到-1~1。
     * enter: 確認這筆軌跡資料為正確的軌跡，將其存至新文件的資料內。
     * delete: 當不小心"enter"錯資料後，可以用來刪除上一筆存入新文件的資料。
 
-![](https://i.imgur.com/BOpGaLm.png)<br>
+![](https://i.imgur.com/BOpGaLm.png)
+<br>
 完成後，會生成一個annotation/step2_output.csv檔，訓練集就完成了。<br><br><br>
 
 <font size=5> 3.訓練lstm </font><br>
@@ -132,6 +151,7 @@ pip install jupyter
 
 打開jupyter notebook
 ```
+cd ..
 jupyter notebook
 ```
 打開lstm_training
@@ -151,17 +171,20 @@ python analyze_lstm_model.py
 
 紅色區域則是會出現誤判的情況,可以藉此查看資料集是否有缺失。
 
-![](https://i.imgur.com/1T5ACst.png)
-<br>
+![](https://i.imgur.com/1T5ACst.png)<br>
 另外可以調整 all_range 參數,範圍為0~1,可以看不同長度的軌跡的辨識範圍。
 ex: all_range = 0.5
-![](https://i.imgur.com/pJNL8oQ.png)
+![](https://i.imgur.com/pJNL8oQ.png)<br>
 
 <br><br>
 <font size=5> 4.訓練EfficientDet </font><br>
 這裡是使用tensorflow 所提供的tflite-model-maker套件來訓練,模型使用最小的EfficientDet-lite0。
 * 環境架設
 ```
+conda deactivate
+conda create -n env2 python=3.6
+conda activate env2
+
 pip install tflite-model-maker
 pip install pycocotools
 ```
@@ -174,12 +197,14 @@ pip install pycocotools
 ##安裝roboflow
 pip install roboflow
 
+python
 ##執行以下程式,就會下載
 from roboflow import Roboflow
 rf = Roboflow(api_key="hyh1caIftsOB4z9RuLIs")
 project = rf.workspace("leapsy").project("hand_dataset")
 dataset = project.version(19).download("yolov5")
-
+exit()
+mv hand_dataset-19 ../dataset/EfficientDet
 
 ```
 
