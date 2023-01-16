@@ -202,7 +202,7 @@ python
 from roboflow import Roboflow
 rf = Roboflow(api_key="hyh1caIftsOB4z9RuLIs")
 project = rf.workspace("leapsy").project("hand_dataset")
-dataset = project.version(19).download("yolov5")
+dataset = project.version(19).download("tfrecord")
 exit()
 mv hand_dataset-19 ../dataset/EfficientDet
 
